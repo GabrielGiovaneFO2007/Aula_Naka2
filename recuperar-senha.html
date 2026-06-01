@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recuperar Senha - BarberFácil</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="auth-page">
+  <div class="auth-card">
+    <div class="logo">
+      <h1>BarberFácil</h1>
+      <p>Recuperar Senha</p>
+    </div>
+
+    <div class="alert" id="recuperar-alert"></div>
+
+    <form id="form-recuperar" onsubmit="return handleRecuperar(event)">
+      <div class="form-group">
+        <label for="rec-cpf">CPF</label>
+        <input type="text" id="rec-cpf" placeholder="000.000.000-00" maxlength="14"
+               autocomplete="off" required>
+      </div>
+      <div class="form-group" id="step-nova-senha" style="display:none;">
+        <label for="rec-nova-senha">Nova Senha</label>
+        <input type="password" id="rec-nova-senha" placeholder="Mínimo 4 caracteres">
+      </div>
+      <div class="form-group" id="step-confirmar" style="display:none;">
+        <label for="rec-confirmar">Confirmar Nova Senha</label>
+        <input type="password" id="rec-confirmar" placeholder="Repita a nova senha">
+      </div>
+      <button type="submit" class="btn btn-primary" id="btn-recuperar">Verificar CPF</button>
+    </form>
+
+    <div class="auth-links">
+      <p><a href="index.html">Voltar ao Login</a></p>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/seed.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    Seed.init();
+
+    let step = 1;
+    let cpfRecuperacao = '';
+
+    document.getElementById('rec-cpf').addEventListener('input', function(e) {
+      let v = Utils.somenteNumeros(e.target.value);
+      if (v.length > 11) v = v.substr(0, 11);
+      e.target.value = Utils.formatarCpf(v);
+    });
+
+    function handleRecuperar(e) {
+      e.preventDefault();
+      const alert = document.getElementById('recuperar-alert');
+
+      if (step === 1) {
+        const cpf = document.getElementById('rec-cpf').value;
+
+        if (!Utils.validarCpf(cpf)) {
+          alert.textContent = 'CPF deve conter 11 dígitos numéricos.';
+          alert.className = 'alert error show';
+          return false;
+        }
+
+        // Verificar se é admin
+        if (Utils.somenteNumeros(cpf) === APP_CONFIG.admin.cpf) {
+          cpfRecuperacao = cpf;
+          step = 2;
+          document.getElementById('step-nova-senha').style.display = 'block';
+          document.getElementById('step-confirmar').style.display = 'block';
+          document.getElementById('btn-recuperar').textContent = 'Redefinir Senha';
+          alert.textContent = 'CPF encontrado! Defina sua nova senha.';
+          alert.className = 'alert success show';
+          return false;
+        }
+
+        // Verificar no localStorage
+        const usuario = Storage.buscarUsuarioPorCpf(cpf);
+        if (usuario) {
+          cpfRecuperacao = cpf;
+          step = 2;
+          document.getElementById('step-nova-senha').style.display = 'block';
+          document.getElementById('step-confirmar').style.display = 'block';
+          document.getElementById('btn-recuperar').textContent = 'Redefinir Senha';
+          alert.textContent = 'CPF encontrado! Defina sua nova senha.';
+          alert.className = 'alert success show';
+        } else {
+          alert.textContent = 'CPF não encontrado no sistema.';
+          alert.className = 'alert error show';
+        }
+
+      } else if (step === 2) {
+        const novaSenha = document.getElementById('rec-nova-senha').value;
+        const confirmar = document.getElementById('rec-confirmar').value;
+
+        if (!novaSenha || novaSenha.length < 4) {
+          alert.textContent = 'Senha deve ter pelo menos 4 caracteres.';
+          alert.className = 'alert error show';
+          return false;
+        }
+        if (novaSenha !== confirmar) {
+          alert.textContent = 'As senhas não coincidem.';
+          alert.className = 'alert error show';
+          return false;
+        }
+
+        // Redefinir senha
+        if (Utils.somenteNumeros(cpfRecuperacao) === APP_CONFIG.admin.cpf) {
+          APP_CONFIG.admin.senha = novaSenha;
+          alert.textContent = 'Senha do administrador redefinida! (Em protótipo, memória volátil)';
+          alert.className = 'alert success show';
+          setTimeout(() => window.location.href = 'index.html', 1500);
+        } else {
+          const usuarios = Storage.getUsuarios();
+          const idx = usuarios.findIndex(u => u.cpf === Utils.somenteNumeros(cpfRecuperacao));
+          if (idx !== -1) {
+            usuarios[idx].senha = novaSenha;
+            Storage.salvarUsuarios && localStorage.setItem(APP_CONFIG.storageKeys.usuarios, JSON.stringify(usuarios));
+            alert.textContent = 'Senha redefinida com sucesso! Redirecionando...';
+            alert.className = 'alert success show';
+            setTimeout(() => window.location.href = 'index.html', 1500);
+          }
+        }
+      }
+
+      return false;
+    }
+  </script>
+</body>
+</html>

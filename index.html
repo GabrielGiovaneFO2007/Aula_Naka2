@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - BarberFácil</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="auth-page">
+  <div class="auth-card">
+    <div class="logo">
+      <h1>BarberFácil</h1>
+      <p>Sistema de Controle de Estoque</p>
+    </div>
+
+    <div class="alert" id="login-alert"></div>
+
+    <form id="form-login" onsubmit="return handleLogin(event)">
+      <div class="form-group">
+        <label for="login-cpf">CPF</label>
+        <input type="text" id="login-cpf" placeholder="000.000.000-00" maxlength="14"
+               autocomplete="off" required>
+      </div>
+      <div class="form-group">
+        <label for="login-senha">Senha</label>
+        <input type="password" id="login-senha" placeholder="Sua senha" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Entrar</button>
+    </form>
+
+    <div class="auth-links">
+      <p><a href="cadastro.html">Criar conta</a> &middot; <a href="recuperar-senha.html">Esqueci a senha</a></p>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/seed.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    // Inicializar seed data
+    Seed.init();
+
+    // Se já está logado, redirecionar
+    if (Auth.estaLogado()) {
+      Auth.redirecionarPorRole();
+    }
+
+    // Formatar CPF no input
+    document.getElementById('login-cpf').addEventListener('input', function(e) {
+      let v = Utils.somenteNumeros(e.target.value);
+      if (v.length > 11) v = v.substr(0, 11);
+      e.target.value = Utils.formatarCpf(v);
+    });
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const cpf = document.getElementById('login-cpf').value;
+      const senha = document.getElementById('login-senha').value;
+      const alert = document.getElementById('login-alert');
+
+      if (!cpf || !senha) {
+        alert.textContent = 'Preencha todos os campos.';
+        alert.className = 'alert error show';
+        return false;
+      }
+
+      const result = Auth.fazerLogin(cpf, senha);
+
+      if (result.ok) {
+        alert.textContent = 'Login realizado com sucesso! Redirecionando...';
+        alert.className = 'alert success show';
+        setTimeout(() => Auth.redirecionarPorRole(), 500);
+      } else {
+        alert.textContent = result.erro;
+        alert.className = 'alert error show';
+      }
+
+      return false;
+    }
+  </script>
+</body>
+</html>

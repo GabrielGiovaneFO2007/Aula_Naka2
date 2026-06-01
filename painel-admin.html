@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Administrativo - BarberFácil</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Sidebar Toggle Mobile -->
+  <button class="sidebar-toggle" onclick="toggleSidebar()">&#9776;</button>
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+  <div class="panel-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">BarberFácil</div>
+        <div class="user-info">
+          <div class="user-name" id="user-name">Administrador</div>
+          <div class="user-role">Administrador</div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <div class="nav-section-title">Principal</div>
+          <button class="nav-item active" data-section="dashboard" onclick="mostrarSecao('dashboard')">
+            <span class="nav-icon">&#9632;</span> Dashboard
+          </button>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Gestão</div>
+          <button class="nav-item" data-section="colaboradores" onclick="mostrarSecao('colaboradores')">
+            <span class="nav-icon">&#9823;</span> Colaboradores
+          </button>
+          <button class="nav-item" data-section="clientes" onclick="mostrarSecao('clientes')">
+            <span class="nav-icon">&#9823;</span> Clientes
+          </button>
+          <button class="nav-item" data-section="produtos" onclick="mostrarSecao('produtos')">
+            <span class="nav-icon">&#9823;</span> Produtos
+          </button>
+          <button class="nav-item" data-section="estoque" onclick="mostrarSecao('estoque')">
+            <span class="nav-icon">&#9823;</span> Estoque
+          </button>
+          <button class="nav-item" data-section="vendas" onclick="mostrarSecao('vendas')">
+            <span class="nav-icon">&#9823;</span> Vendas
+          </button>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Relatórios</div>
+          <button class="nav-item" data-section="rel-vendas" onclick="mostrarSecao('rel-vendas')">
+            <span class="nav-icon">&#9823;</span> Rel. Vendas
+          </button>
+          <button class="nav-item" data-section="rel-financeiro" onclick="mostrarSecao('rel-financeiro')">
+            <span class="nav-icon">&#9823;</span> Rel. Financeiro
+          </button>
+          <button class="nav-item" data-section="rel-frequencia" onclick="mostrarSecao('rel-frequencia')">
+            <span class="nav-icon">&#9823;</span> Frequência Clientes
+          </button>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button class="btn-logout" onclick="Auth.fazerLogout()">
+          <span>&#10140;</span> Sair do Sistema
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- ==================== DASHBOARD ==================== -->
+      <div class="section active" id="section-dashboard">
+        <div class="page-header">
+          <h1>Dashboard</h1>
+          <p>Visão geral do sistema</p>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card accent">
+            <div class="stat-icon">&#128176;</div>
+            <div class="stat-value" id="stat-receita">R$ 0,00</div>
+            <div class="stat-label">Receita Total</div>
+          </div>
+          <div class="stat-card info">
+            <div class="stat-icon">&#128722;</div>
+            <div class="stat-value" id="stat-pedidos">0</div>
+            <div class="stat-label">Total de Pedidos</div>
+          </div>
+          <div class="stat-card success">
+            <div class="stat-icon">&#128100;</div>
+            <div class="stat-value" id="stat-clientes">0</div>
+            <div class="stat-label">Clientes Cadastrados</div>
+          </div>
+          <div class="stat-card warning">
+            <div class="stat-icon">&#128230;</div>
+            <div class="stat-value" id="stat-produtos">0</div>
+            <div class="stat-label">Produtos Cadastrados</div>
+          </div>
+          <div class="stat-card danger">
+            <div class="stat-icon">&#9888;</div>
+            <div class="stat-value" id="stat-estoque-baixo">0</div>
+            <div class="stat-label">Estoque Baixo</div>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card info">
+            <div class="stat-icon">&#128101;</div>
+            <div class="stat-value" id="stat-colaboradores">0</div>
+            <div class="stat-label">Colaboradores</div>
+          </div>
+          <div class="stat-card accent">
+            <div class="stat-icon">&#9201;</div>
+            <div class="stat-value" id="stat-pendentes">0</div>
+            <div class="stat-label">Pagamentos Pendentes</div>
+          </div>
+        </div>
+
+        <!-- Módulos rápidos -->
+        <h3 class="mb-2 mt-3">Acesso Rápido</h3>
+        <div class="module-grid">
+          <div class="module-card" onclick="mostrarSecao('vendas')">
+            <div class="module-icon">&#128722;</div>
+            <div class="module-title">Registrar Venda</div>
+            <div class="module-desc">Criar novo pedido</div>
+          </div>
+          <div class="module-card" onclick="mostrarSecao('estoque')">
+            <div class="module-icon">&#128230;</div>
+            <div class="module-title">Controle de Estoque</div>
+            <div class="module-desc">Entrada e saída</div>
+          </div>
+          <div class="module-card" onclick="mostrarSecao('clientes')">
+            <div class="module-icon">&#128100;</div>
+            <div class="module-title">Clientes</div>
+            <div class="module-desc">Gerenciar clientes</div>
+          </div>
+          <div class="module-card" onclick="mostrarSecao('produtos')">
+            <div class="module-icon">&#128230;</div>
+            <div class="module-title">Produtos</div>
+            <div class="module-desc">Gerenciar produtos</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== COLABORADORES ==================== -->
+      <div class="section" id="section-colaboradores">
+        <div class="page-header">
+          <h1>Colaboradores</h1>
+          <p>Gerenciar equipe de colaboradores</p>
+        </div>
+
+        <div class="table-container">
+          <div class="table-header">
+            <h3>Equipe Cadastrada (<span id="total-colaboradores">0</span>)</h3>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>CPF</th>
+                  <th>Cargo</th>
+                  <th>Data Cadastro</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-colaboradores"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== CLIENTES ==================== -->
+      <div class="section" id="section-clientes">
+        <div class="page-header">
+          <h1>Clientes</h1>
+          <p>Gerenciar clientes e histórico de compras</p>
+        </div>
+
+        <div class="table-container">
+          <div class="table-header">
+            <h3>Clientes Cadastrados (<span id="total-clientes">0</span>)</h3>
+            <div class="table-actions">
+              <input type="text" class="search-input" id="busca-cliente" placeholder="Buscar cliente..." oninput="Clientes.carregarTabela('tabela-clientes', this.value)">
+              <button class="btn btn-success btn-sm" onclick="Clientes.abrirModalCadastro()">+ Novo Cliente</button>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>CPF</th>
+                  <th>Telefone</th>
+                  <th>Chave PIX</th>
+                  <th>Cadastro</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="tabela-clientes"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Modal Cliente -->
+        <div class="modal-overlay" id="modal-cliente">
+          <div class="modal">
+            <div class="modal-header">
+              <h3 id="modal-cliente-title">Novo Cliente</h3>
+              <button class="modal-close" onclick="Clientes.fecharModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+              <form id="form-cliente" onsubmit="return false;">
+                <input type="hidden" id="cliente-id">
+                <div class="form-group">
+                  <label for="cliente-nome">Nome Completo</label>
+                  <input type="text" id="cliente-nome" placeholder="Nome do cliente" required>
+                </div>
+                <div class="form-group">
+                  <label for="cliente-cpf">CPF</label>
+                  <input type="text" id="cliente-cpf" placeholder="000.000.000-00" maxlength="14">
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="cliente-telefone">Telefone</label>
+                    <input type="text" id="cliente-telefone" placeholder="(62) 99999-9999" maxlength="15">
+                  </div>
+                  <div class="form-group">
+                    <label for="cliente-pix">Chave PIX</label>
+                    <input type="text" id="cliente-pix" placeholder="E-mail, CPF ou telefone">
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary btn-sm" onclick="Clientes.fecharModal()">Cancelar</button>
+              <button class="btn btn-primary btn-sm" onclick="Clientes.salvar()">Salvar</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Histórico -->
+        <div class="modal-overlay" id="modal-historico">
+          <div class="modal">
+            <div class="modal-header">
+              <h3>Histórico do Cliente</h3>
+              <button class="modal-close" onclick="Clientes.fecharHistorico()">&times;</button>
+            </div>
+            <div class="modal-body" id="historico-body"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== PRODUTOS ==================== -->
+      <div class="section" id="section-produtos">
+        <div class="page-header">
+          <h1>Produtos</h1>
+          <p>Gerenciar catálogo de produtos de beleza</p>
+        </div>
+
+        <div class="table-container">
+          <div class="table-header">
+            <h3>Produtos Cadastrados (<span id="total-produtos">0</span>)</h3>
+            <div class="table-actions">
+              <input type="text" class="search-input" id="busca-produto" placeholder="Buscar produto..." oninput="Produtos.carregarTabela('tbody-produtos', this.value)">
+              <button class="btn btn-success btn-sm" onclick="Produtos.abrirModalCadastro()">+ Novo Produto</button>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Marca</th>
+                  <th>Categoria</th>
+                  <th>Preço</th>
+                  <th>Estoque</th>
+                  <th>Valor Total</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-produtos"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Modal Produto -->
+        <div class="modal-overlay" id="modal-produto">
+          <div class="modal">
+            <div class="modal-header">
+              <h3 id="modal-produto-title">Novo Produto</h3>
+              <button class="modal-close" onclick="Produtos.fecharModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+              <form id="form-produto" onsubmit="return false;">
+                <input type="hidden" id="produto-id">
+                <div class="form-group">
+                  <label for="produto-nome">Nome do Produto</label>
+                  <input type="text" id="produto-nome" placeholder="Ex: Pomada Modeladora">
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="produto-marca">Marca</label>
+                    <input type="text" id="produto-marca" placeholder="Ex: Umberto">
+                  </div>
+                  <div class="form-group">
+                    <label for="produto-categoria">Categoria</label>
+                    <select id="produto-categoria"></select>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="produto-preco">Preço (R$)</label>
+                    <input type="number" id="produto-preco" placeholder="0.00" min="0" step="0.01">
+                  </div>
+                  <div class="form-group">
+                    <label for="produto-quantidade">Quantidade</label>
+                    <input type="number" id="produto-quantidade" placeholder="0" min="0">
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary btn-sm" onclick="Produtos.fecharModal()">Cancelar</button>
+              <button class="btn btn-primary btn-sm" onclick="Produtos.salvar()">Salvar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== ESTOQUE ==================== -->
+      <div class="section" id="section-estoque">
+        <div class="page-header">
+          <h1>Controle de Estoque</h1>
+          <p>Registrar entrada e saída de produtos</p>
+        </div>
+
+        <div class="flex gap-1 mb-3">
+          <button class="btn btn-success btn-sm" onclick="Estoque.abrirModalEntrada()">+ Entrada de Estoque</button>
+          <button class="btn btn-danger btn-sm" onclick="Estoque.abrirModalSaida()">- Saída de Estoque</button>
+        </div>
+
+        <div class="table-container">
+          <div class="table-header">
+            <h3>Movimentações</h3>
+            <div class="table-actions">
+              <input type="text" class="search-input" id="busca-mov" placeholder="Buscar..." oninput="Estoque.carregarTabela('tbody-movimentacoes', this.value)">
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Produto</th>
+                  <th>Tipo</th>
+                  <th>Quantidade</th>
+                  <th>Data</th>
+                  <th>Observação</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-movimentacoes"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Modal Estoque -->
+        <div class="modal-overlay" id="modal-estoque">
+          <div class="modal">
+            <div class="modal-header">
+              <h3 id="modal-estoque-title">Movimentação de Estoque</h3>
+              <button class="modal-close" onclick="Estoque.fecharModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+              <form id="form-mov-estoque" onsubmit="return false;">
+                <input type="hidden" id="mov-tipo" value="entrada">
+                <div class="form-group">
+                  <label for="mov-produto">Produto</label>
+                  <select id="mov-produto"></select>
+                </div>
+                <div class="form-group">
+                  <label for="mov-quantidade">Quantidade</label>
+                  <input type="number" id="mov-quantidade" placeholder="0" min="1">
+                </div>
+                <div class="form-group">
+                  <label for="mov-observacao">Observação</label>
+                  <input type="text" id="mov-observacao" placeholder="Motivo da movimentação">
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary btn-sm" onclick="Estoque.fecharModal()">Cancelar</button>
+              <button class="btn btn-primary btn-sm" onclick="Estoque.salvar()">Registrar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== VENDAS ==================== -->
+      <div class="section" id="section-vendas">
+        <div class="page-header">
+          <h1>Vendas</h1>
+          <p>Registrar e gerenciar pedidos</p>
+        </div>
+
+        <div class="flex gap-1 mb-3">
+          <button class="btn btn-success btn-sm" onclick="Vendas.abrirModalVenda()">+ Nova Venda</button>
+        </div>
+
+        <div class="filter-bar">
+          <input type="text" class="search-input" id="busca-venda" placeholder="Buscar por cliente..." oninput="filtrarVendas()">
+          <select id="filtro-status-venda" onchange="filtrarVendas()">
+            <option value="">Todos os Status</option>
+            <option value="Concluído">Concluído</option>
+            <option value="Pendente">Pendente</option>
+          </select>
+        </div>
+
+        <div class="table-container">
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Cliente</th>
+                  <th>Itens</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                  <th>Pagamento</th>
+                  <th>Data</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-pedidos"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Modal Venda -->
+        <div class="modal-overlay" id="modal-venda">
+          <div class="modal" style="max-width: 640px;">
+            <div class="modal-header">
+              <h3>Registrar Venda</h3>
+              <button class="modal-close" onclick="Vendas.fecharModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+              <form id="form-venda" onsubmit="return false;">
+                <div class="form-group">
+                  <label for="venda-cliente">Cliente</label>
+                  <select id="venda-cliente"></select>
+                </div>
+                <hr style="border-color: var(--border); margin: 16px 0;">
+                <h4 class="mb-2">Adicionar Itens</h4>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="venda-produto-item">Produto</label>
+                    <select id="venda-produto-item"></select>
+                  </div>
+                  <div class="form-group">
+                    <label for="venda-item-qtd">Quantidade</label>
+                    <input type="number" id="venda-item-qtd" placeholder="1" min="1" value="1">
+                  </div>
+                </div>
+                <button type="button" class="btn btn-success btn-sm mb-2" onclick="Vendas.adicionarItem()">+ Adicionar Item</button>
+                <div id="venda-itens-lista"></div>
+                <hr style="border-color: var(--border); margin: 16px 0;">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="venda-metodo">Método de Pagamento</label>
+                    <select id="venda-metodo">
+                      <option value="">Selecione...</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="venda-status">Status do Pagamento</label>
+                    <select id="venda-status">
+                      <option value="">Selecione...</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="flex-between mt-2" style="padding:12px; background:var(--bg); border-radius:var(--radius-sm);">
+                  <strong>Total</strong>
+                  <strong class="text-accent" style="font-size:1.3rem" id="venda-total">R$ 0,00</strong>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary btn-sm" onclick="Vendas.fecharModal()">Cancelar</button>
+              <button class="btn btn-primary btn-sm" onclick="Vendas.salvar()">Finalizar Venda</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Detalhes Venda -->
+        <div class="modal-overlay" id="modal-detalhes-venda">
+          <div class="modal" style="max-width: 580px;">
+            <div class="modal-header">
+              <h3>Detalhes do Pedido</h3>
+              <button class="modal-close" onclick="Vendas.fecharDetalhes()">&times;</button>
+            </div>
+            <div class="modal-body" id="detalhes-venda-body"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== RELATÓRIO DE VENDAS ==================== -->
+      <div class="section" id="section-rel-vendas">
+        <div class="page-header">
+          <h1>Relatório de Vendas</h1>
+          <p>Análise de vendas por período</p>
+        </div>
+
+        <div class="filter-bar">
+          <select id="periodo-vendas" onchange="Relatorios.relatorioVendas(this.value)">
+            <option value="mensal">Último Mês</option>
+            <option value="trimestral">Último Trimestre</option>
+            <option value="semestral">Último Semestre</option>
+          </select>
+          <button class="btn btn-secondary btn-sm" onclick="window.print()">&#128438; Imprimir</button>
+        </div>
+
+        <div id="relatorio-vendas-conteudo"></div>
+      </div>
+
+      <!-- ==================== RELATÓRIO FINANCEIRO ==================== -->
+      <div class="section" id="section-rel-financeiro">
+        <div class="page-header">
+          <h1>Relatório Financeiro</h1>
+          <p>Visão financeira do negócio</p>
+        </div>
+
+        <div class="filter-bar">
+          <button class="btn btn-secondary btn-sm" onclick="window.print()">&#128438; Imprimir</button>
+        </div>
+
+        <div id="relatorio-financeiro-conteudo"></div>
+      </div>
+
+      <!-- ==================== FREQUÊNCIA DE CLIENTES ==================== -->
+      <div class="section" id="section-rel-frequencia">
+        <div class="page-header">
+          <h1>Frequência de Compras</h1>
+          <p>Monitoramento de clientes ativos e inativos</p>
+        </div>
+
+        <div class="filter-bar">
+          <button class="btn btn-secondary btn-sm" onclick="window.print()">&#128438; Imprimir</button>
+        </div>
+
+        <div id="relatorio-frequencia-conteudo"></div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/seed.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/clientes.js"></script>
+  <script src="js/produtos.js"></script>
+  <script src="js/estoque.js"></script>
+  <script src="js/vendas.js"></script>
+  <script src="js/relatorios.js"></script>
+  <script>
+    // === INICIALIZAÇÃO ===
+    Seed.init();
+
+    // Proteção de rota
+    if (!Storage.exigirLogin('admin')) throw new Error('Acesso negado');
+
+    const sessao = Auth.getSessao();
+    document.getElementById('user-name').textContent = sessao.nome;
+
+    // === NAVEGAÇÃO DE SEÇÕES ===
+    function mostrarSecao(nome) {
+      // Esconder todas as seções
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      // Desativar todos os itens do menu
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+      // Mostrar seção selecionada
+      const section = document.getElementById('section-' + nome);
+      if (section) section.classList.add('active');
+
+      // Ativar item do menu
+      const navItem = document.querySelector(`[data-section="${nome}"]`);
+      if (navItem) navItem.classList.add('active');
+
+      // Carregar dados da seção
+      carregarDadosSecao(nome);
+
+      // Fechar sidebar no mobile
+      fecharSidebar();
+    }
+
+    function carregarDadosSecao(nome) {
+      switch (nome) {
+        case 'dashboard':
+          carregarDashboard();
+          break;
+        case 'colaboradores':
+          carregarColaboradores();
+          break;
+        case 'clientes':
+          Clientes.carregarTabela('tabela-clientes');
+          Clientes.atualizarContagem();
+          break;
+        case 'produtos':
+          Produtos.carregarTabela('tbody-produtos');
+          Produtos.atualizarContagem();
+          break;
+        case 'estoque':
+          Estoque.carregarTabela('tbody-movimentacoes');
+          break;
+        case 'vendas':
+          Vendas.carregarTabela('tbody-pedidos');
+          break;
+        case 'rel-vendas':
+          Relatorios.relatorioVendas('mensal');
+          break;
+        case 'rel-financeiro':
+          Relatorios.relatorioFinanceiro();
+          break;
+        case 'rel-frequencia':
+          Relatorios.relatorioFrequencia();
+          break;
+      }
+    }
+
+    // === DASHBOARD ===
+    function carregarDashboard() {
+      const pedidos = Storage.getPedidos();
+      const clientes = Storage.getClientes();
+      const produtos = Storage.getProdutos();
+      const usuarios = Storage.getUsuarios();
+      const concluidos = pedidos.filter(p => p.statusPagamento === 'Concluído');
+      const pendentes = pedidos.filter(p => p.statusPagamento === 'Pendente');
+
+      document.getElementById('stat-receita').textContent = Utils.formatarMoeda(concluidos.reduce((s, p) => s + p.valorTotal, 0));
+      document.getElementById('stat-pedidos').textContent = pedidos.length;
+      document.getElementById('stat-clientes').textContent = clientes.length;
+      document.getElementById('stat-produtos').textContent = produtos.length;
+      document.getElementById('stat-estoque-baixo').textContent = produtos.filter(p => p.quantidade <= 5).length;
+      document.getElementById('stat-colaboradores').textContent = usuarios.length;
+      document.getElementById('stat-pendentes').textContent = pendentes.reduce((s, p) => s + p.valorTotal, 0);
+    }
+
+    // === COLABORADORES ===
+    function carregarColaboradores() {
+      const usuarios = Storage.getUsuarios();
+      document.getElementById('total-colaboradores').textContent = usuarios.length;
+      const tbody = document.getElementById('tbody-colaboradores');
+      tbody.innerHTML = usuarios.map(u => `
+        <tr>
+          <td><strong>${Utils.escapeHtml(u.nome)}</strong></td>
+          <td class="text-mono">${Utils.formatarCpf(u.cpf)}</td>
+          <td><span class="badge badge-${u.role === 'admin' ? 'admin' : 'colaborador'}">${u.role === 'admin' ? 'Administrador' : 'Colaborador'}</span></td>
+          <td>${Utils.formatarData(u.dataCadastro)}</td>
+        </tr>
+      `).join('');
+    }
+
+    // === FILTRO VENDAS ===
+    function filtrarVendas() {
+      const filtro = document.getElementById('busca-venda')?.value || '';
+      const status = document.getElementById('filtro-status-venda')?.value || '';
+      Vendas.carregarTabela('tbody-pedidos', filtro, status);
+    }
+
+    // === SIDEBAR MOBILE ===
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sidebar-overlay').classList.toggle('show');
+    }
+
+    function fecharSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('sidebar-overlay').classList.remove('show');
+    }
+
+    // === CPF MASKS ===
+    document.addEventListener('input', function(e) {
+      if (e.target.id === 'cliente-cpf') {
+        let v = Utils.somenteNumeros(e.target.value);
+        if (v.length > 11) v = v.substr(0, 11);
+        e.target.value = Utils.formatarCpf(v);
+      }
+      if (e.target.id === 'cliente-telefone') {
+        let v = Utils.somenteNumeros(e.target.value);
+        if (v.length > 11) v = v.substr(0, 11);
+        e.target.value = Utils.formatarTelefone(v);
+      }
+    });
+
+    // === INICIAR MÉTODOS DE PAGAMENTO NO MODAL DE VENDA ===
+    function preencherMetodosPagamento() {
+      const sel = document.getElementById('venda-metodo');
+      if (!sel) return;
+      sel.innerHTML = '<option value="">Selecione...</option>' +
+        APP_CONFIG.metodosPagamento.map(m => `<option value="${m}">${m}</option>`).join('');
+
+      const selStatus = document.getElementById('venda-status');
+      if (!selStatus) return;
+      selStatus.innerHTML = '<option value="">Selecione...</option>' +
+        APP_CONFIG.statusPagamento.map(s => `<option value="${s}">${s}</option>`).join('');
+    }
+
+    // === CARREGAR DADOS INICIAIS ===
+    carregarDashboard();
+    preencherMetodosPagamento();
+  </script>
+</body>
+</html>

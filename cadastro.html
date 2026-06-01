@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro - BarberFácil</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="auth-page">
+  <div class="auth-card">
+    <div class="logo">
+      <h1>BarberFácil</h1>
+      <p>Criar Conta de Colaborador</p>
+    </div>
+
+    <div class="alert" id="cadastro-alert"></div>
+
+    <form id="form-cadastro" onsubmit="return handleCadastro(event)">
+      <div class="form-group">
+        <label for="cad-nome">Nome Completo</label>
+        <input type="text" id="cad-nome" placeholder="Seu nome completo" required>
+      </div>
+      <div class="form-group">
+        <label for="cad-cpf">CPF</label>
+        <input type="text" id="cad-cpf" placeholder="000.000.000-00" maxlength="14"
+               autocomplete="off" required>
+      </div>
+      <div class="form-group">
+        <label for="cad-senha">Senha</label>
+        <input type="password" id="cad-senha" placeholder="Mínimo 4 caracteres" required>
+      </div>
+      <div class="form-group">
+        <label for="cad-confirm-senha">Confirmar Senha</label>
+        <input type="password" id="cad-confirm-senha" placeholder="Repita a senha" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Cadastrar</button>
+    </form>
+
+    <div class="auth-links">
+      <p><a href="index.html">Já tenho conta - Fazer Login</a></p>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/seed.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    Seed.init();
+
+    // Formatar CPF
+    document.getElementById('cad-cpf').addEventListener('input', function(e) {
+      let v = Utils.somenteNumeros(e.target.value);
+      if (v.length > 11) v = v.substr(0, 11);
+      e.target.value = Utils.formatarCpf(v);
+    });
+
+    function handleCadastro(e) {
+      e.preventDefault();
+      const nome = document.getElementById('cad-nome').value.trim();
+      const cpf = document.getElementById('cad-cpf').value;
+      const senha = document.getElementById('cad-senha').value;
+      const confirmSenha = document.getElementById('cad-confirm-senha').value;
+      const alert = document.getElementById('cadastro-alert');
+
+      if (!nome || !cpf || !senha || !confirmSenha) {
+        alert.textContent = 'Preencha todos os campos.';
+        alert.className = 'alert error show';
+        return false;
+      }
+
+      const result = Auth.cadastrarColaborador(nome, cpf, senha, confirmSenha);
+
+      if (result.ok) {
+        alert.textContent = 'Conta criada com sucesso! Redirecionando para o login...';
+        alert.className = 'alert success show';
+        setTimeout(() => window.location.href = 'index.html', 1500);
+      } else {
+        alert.textContent = result.erro;
+        alert.className = 'alert error show';
+      }
+
+      return false;
+    }
+  </script>
+</body>
+</html>
